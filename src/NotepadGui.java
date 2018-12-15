@@ -8,9 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class NotepadGui extends JFrame {
@@ -34,7 +32,8 @@ public class NotepadGui extends JFrame {
 	private JTextArea textArea = new JTextArea();
 	private JScrollPane scrollPane = new JScrollPane(textArea);
 
-	private JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+	private JFileChooser openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+	private JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
 	{
 		fileMenu.add(menuItemNew);
@@ -50,6 +49,9 @@ public class NotepadGui extends JFrame {
 		textArea.setBorder(new LineBorder(Color.lightGray, 3));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		saveFileChooser.setDialogTitle("Choose a directory to save your file: ");
+		saveFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	}
 
 	public NotepadGui() {
@@ -79,26 +81,31 @@ public class NotepadGui extends JFrame {
 
 	private void saveFile() {
 
-		try {
-			File file = new File("new.txt");
-			FileWriter writer = new FileWriter(file);
-			BufferedWriter write = new BufferedWriter(writer);
-			write.write(textArea.getText());
-			write.close();
-			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
-					"Message", JOptionPane.INFORMATION_MESSAGE);
+		int returnValue = saveFileChooser.showSaveDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			System.out.println(saveFileChooser.getSelectedFile().getPath());
+			try {
+				File file = new File(saveFileChooser.getSelectedFile().getPath());
+				FileWriter writer = new FileWriter(file);
+				BufferedWriter write = new BufferedWriter(writer);
+				write.write(textArea.getText());
+				write.close();
+				JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
+						"Message", JOptionPane.INFORMATION_MESSAGE);
+			}
+
+			catch (Exception exception){
+				// ??????
+			}
 		}
 
-		catch (Exception exception){
-			JOptionPane.showInternalMessageDialog(null, "File could not be saved!",
-					"Error!", JOptionPane.INFORMATION_MESSAGE);
-		}
 	}
 
 	private void openFile() throws IOException {
-			fileChooser.showOpenDialog(null);
-			File selectedFile = fileChooser.getSelectedFile();
-			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+
+		openFileChooser.showOpenDialog(null);
+		File selectedFile = openFileChooser.getSelectedFile();
+		textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
 	}
 
 	private class EventHandler implements ActionListener {
@@ -120,7 +127,12 @@ public class NotepadGui extends JFrame {
 			}
 
 			else if(event.getSource() == menuItemSave) {
-				saveFile();
+				//try {
+					saveFile();
+				//}
+				//catch (Exception exception) {
+					// ???????
+				//}
 			}
 
 			else if(event.getSource() == helpMenuAbout) {
