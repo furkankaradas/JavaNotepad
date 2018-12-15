@@ -79,12 +79,12 @@ public class NotepadGui extends JFrame {
 			BufferedWriter write = new BufferedWriter(writer);
 			write.write(textArea.getText());
 			write.close();
-			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved.",
+			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
 					"Message", JOptionPane.INFORMATION_MESSAGE);
 		}
 
 		catch (Exception exception){
-			JOptionPane.showInternalMessageDialog(null, exception,
+			JOptionPane.showInternalMessageDialog(null, "File could not be saved!",
 					"Error!", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
@@ -107,7 +107,7 @@ public class NotepadGui extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 
 			if(event.getSource() == menuItemNew) {
-
+				textArea.setText("");
 			}
 
 			else if(event.getSource() == menuItemOpen) {
