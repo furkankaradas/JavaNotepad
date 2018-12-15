@@ -119,7 +119,7 @@ public class NotepadGui extends JFrame {
 			}
 
 			else if(event.getSource() == helpMenuAbout) {
-				JOptionPane.showInternalMessageDialog(null, "Open Source Notepad",
+				JOptionPane.showInternalMessageDialog(null, "Open Source Notepad\nDesigned by Furkan Karadaş",
 						"About", JOptionPane.INFORMATION_MESSAGE);
 			}
 
