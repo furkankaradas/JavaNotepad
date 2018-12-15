@@ -1,12 +1,15 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class NotepadGui extends JFrame {
@@ -29,6 +32,8 @@ public class NotepadGui extends JFrame {
 
 	private JTextArea textArea = new JTextArea();
 	private JScrollPane scrollPane = new JScrollPane(textArea);
+
+	private JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
 	{
 		fileMenu.add(menuItemNew);
@@ -90,9 +95,10 @@ public class NotepadGui extends JFrame {
 	}
 
 	private void openFile() {
-
 		try {
-			textArea.setText(new String(Files.readAllBytes(Paths.get("test.txt"))));
+			fileChooser.showOpenDialog(null);
+			File selectedFile = fileChooser.getSelectedFile();
+			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
 		}
 
 		catch (Exception exception) {
