@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -94,17 +95,10 @@ public class NotepadGui extends JFrame {
 		}
 	}
 
-	private void openFile() {
-		try {
+	private void openFile() throws IOException {
 			fileChooser.showOpenDialog(null);
 			File selectedFile = fileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
-		}
-
-		catch (Exception exception) {
-			JOptionPane.showInternalMessageDialog(null, "File not found!",
-					"Error!", JOptionPane.INFORMATION_MESSAGE);
-		}
 	}
 
 	private class EventHandler implements ActionListener {
@@ -117,7 +111,12 @@ public class NotepadGui extends JFrame {
 			}
 
 			else if(event.getSource() == menuItemOpen) {
-				openFile();
+				try {
+					openFile();
+				}
+				catch (Exception exception) {
+					// ??????
+				}
 			}
 
 			else if(event.getSource() == menuItemSave) {
