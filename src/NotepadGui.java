@@ -4,10 +4,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -79,25 +76,14 @@ public class NotepadGui extends JFrame {
 		helpMenuAbout.addActionListener(eventHandler);
 	}
 
-	private void saveFile() {
-
-		int returnValue = saveFileChooser.showSaveDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			System.out.println(saveFileChooser.getSelectedFile().getPath());
-			try {
-				File file = new File(saveFileChooser.getSelectedFile().getPath());
-				FileWriter writer = new FileWriter(file);
-				BufferedWriter write = new BufferedWriter(writer);
-				write.write(textArea.getText());
-				write.close();
-				JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
+	private void saveFile() throws IOException {
+		// update ????
+		saveFileChooser.showSaveDialog(null);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileChooser.getSelectedFile().getPath()));
+		writer.write(textArea.getText());
+		writer.close();
+		JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
 						"Message", JOptionPane.INFORMATION_MESSAGE);
-			}
-
-			catch (Exception exception){
-				// ??????
-			}
-		}
 
 	}
 
@@ -112,7 +98,7 @@ public class NotepadGui extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-
+			// Catch ????
 			if(event.getSource() == menuItemNew) {
 				textArea.setText("");
 			}
@@ -122,17 +108,19 @@ public class NotepadGui extends JFrame {
 					openFile();
 				}
 				catch (Exception exception) {
-					// ??????
+					JOptionPane.showInternalMessageDialog(null, "File not opened!",
+							"Error", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 
 			else if(event.getSource() == menuItemSave) {
-				//try {
+				try {
 					saveFile();
-				//}
-				//catch (Exception exception) {
-					// ???????
-				//}
+				}
+				catch (Exception exception) {
+					JOptionPane.showInternalMessageDialog(null, "File not saved!",
+							"Error", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 
 			else if(event.getSource() == helpMenuAbout) {
