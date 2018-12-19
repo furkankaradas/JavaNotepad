@@ -20,11 +20,11 @@ public class NotepadGui extends JFrame {
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File");
 	private JMenu helpMenu = new JMenu("Help");
-	private JMenuItem menuItemNew  = new JMenuItem("New");
-	private JMenuItem menuItemOpen = new JMenuItem("Open");
-	private JMenuItem menuItemSave = new JMenuItem("Save");
-	private JMenuItem menuItemExit = new JMenuItem("Exit");
-	private JMenuItem helpMenuAbout = new JMenuItem("About");
+	private JMenuItem menuItemNew  = new JMenuItem("New",'N');
+	private JMenuItem menuItemOpen = new JMenuItem("Open",'O');
+	private JMenuItem menuItemSave = new JMenuItem("Save",'S');
+	private JMenuItem menuItemExit = new JMenuItem("Exit",'E');
+	private JMenuItem helpMenuAbout = new JMenuItem("About",'H');
 
 	private JTextArea textArea = new JTextArea();
 	private JScrollPane scrollPane = new JScrollPane(textArea);
@@ -78,27 +78,37 @@ public class NotepadGui extends JFrame {
 
 	private void saveFile() throws IOException {
 		// update ????
-		saveFileChooser.showSaveDialog(null);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileChooser.getSelectedFile().getPath()));
-		writer.write(textArea.getText());
-		writer.close();
-		JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
-						"Message", JOptionPane.INFORMATION_MESSAGE);
+		int retValue = saveFileChooser.showSaveDialog(null);
+		if(retValue == JFileChooser.CANCEL_OPTION)
+		{
+			return;
+		}
+		else {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileChooser.getSelectedFile().getPath(), false));
+			writer.write(textArea.getText());
+			writer.close();
+			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
+					"Message", JOptionPane.INFORMATION_MESSAGE);
+		}
 
 	}
 
 	private void openFile() throws IOException {
 
-		openFileChooser.showOpenDialog(null);
-		File selectedFile = openFileChooser.getSelectedFile();
-		textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+		int retValue = openFileChooser.showOpenDialog(null);
+		if(retValue == JFileChooser.CANCEL_OPTION) {
+			return;
+		}
+		else {
+			File selectedFile = openFileChooser.getSelectedFile();
+			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+		}
 	}
 
 	private class EventHandler implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			// Catch ????
 			if(event.getSource() == menuItemNew) {
 				textArea.setText("");
 			}
