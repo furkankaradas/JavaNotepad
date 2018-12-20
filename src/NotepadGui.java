@@ -4,6 +4,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,11 +20,13 @@ public class NotepadGui extends JFrame {
 
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File");
+	private JMenu findMenu = new JMenu("Edit");
 	private JMenu helpMenu = new JMenu("Help");
 	private JMenuItem menuItemNew  = new JMenuItem("New",'N');
 	private JMenuItem menuItemOpen = new JMenuItem("Open",'O');
 	private JMenuItem menuItemSave = new JMenuItem("Save",'S');
 	private JMenuItem menuItemExit = new JMenuItem("Exit",'E');
+	private JMenuItem findMenuItem = new JMenuItem("Find");
 	private JMenuItem helpMenuAbout = new JMenuItem("About",'H');
 
 	private JTextArea textArea = new JTextArea();
@@ -33,15 +36,29 @@ public class NotepadGui extends JFrame {
 	private JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
 	{
+		menuItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+
+
 		fileMenu.add(menuItemNew);
 		fileMenu.add(menuItemOpen);
 		fileMenu.add(menuItemSave);
 		fileMenu.addSeparator();
 		fileMenu.add(menuItemExit);
 
+		helpMenuAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
 		helpMenu.add(helpMenuAbout);
+
+		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+		findMenu.add(findMenuItem);
+
+
 		menuBar.add(fileMenu);
+		menuBar.add(findMenu);
 		menuBar.add(helpMenu);
+
 
 		textArea.setBorder(new LineBorder(Color.lightGray, 3));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -74,6 +91,7 @@ public class NotepadGui extends JFrame {
 		menuItemSave.addActionListener(eventHandler);
 		menuItemExit.addActionListener(eventHandler);
 		helpMenuAbout.addActionListener(eventHandler);
+		findMenuItem.addActionListener(eventHandler);
 	}
 
 	private void saveFile() throws IOException {
@@ -84,13 +102,14 @@ public class NotepadGui extends JFrame {
 			return;
 		}
 		else {
+
 			BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileChooser.getSelectedFile().getPath(), false));
 			writer.write(textArea.getText());
 			writer.close();
 			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
 					"Message", JOptionPane.INFORMATION_MESSAGE);
-		}
 
+		}
 	}
 
 	private void openFile() throws IOException {
@@ -140,6 +159,10 @@ public class NotepadGui extends JFrame {
 
 			else if(event.getSource() == menuItemExit) {
 				System.exit(0);
+			}
+
+			else if(event.getSource() == findMenuItem) {
+				// Write Find Panel
 			}
 
 		}
