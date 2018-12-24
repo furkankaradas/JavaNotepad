@@ -15,6 +15,7 @@ public class NotepadGui extends JFrame {
 	private final int frameHeightSize = 400;
 	private final int locationX = 450;
 	private final int locationY = 200;
+	private String keyWord;
 
 	private Container mainContainer;
 
@@ -162,7 +163,23 @@ public class NotepadGui extends JFrame {
 			}
 
 			else if(event.getSource() == findMenuItem) {
-				// Write Find Panel
+				int startIndex, endIndex;
+				String textAreaWords;
+				keyWord = JOptionPane.showInputDialog(null, "Find Key:");
+				if(keyWord != null) {
+					textAreaWords = textArea.getText();
+					startIndex = textAreaWords.indexOf(keyWord);
+					if(startIndex != -1) {
+						endIndex = startIndex + keyWord.length();
+						textArea.setSelectionStart(startIndex);
+						textArea.setSelectionEnd(endIndex);
+					}
+					else {
+						JOptionPane.showInternalMessageDialog(null, "Key not found!",
+								"Attention", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+
 			}
 
 		}
