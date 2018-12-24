@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.StringTokenizer;
 
-public class NotepadGui extends JFrame{
+public class NotepadGui extends JFrame implements KeyListener {
 
 	private final int frameWidthSize = 600;
 	private final int frameHeightSize = 400;
@@ -106,6 +106,8 @@ public class NotepadGui extends JFrame{
 	private void prepareActionListener() {
 
 		EventHandler eventHandler = new EventHandler();
+
+		textArea.addKeyListener(this);
 		menuItemNew.addActionListener(eventHandler);
 		menuItemOpen.addActionListener(eventHandler);
 		menuItemSave.addActionListener(eventHandler);
@@ -113,6 +115,7 @@ public class NotepadGui extends JFrame{
 		helpMenuAbout.addActionListener(eventHandler);
 		findMenuItem.addActionListener(eventHandler);
 		findClearMenuItem.addActionListener(eventHandler);
+
 	}
 
 	private void saveFile() throws IOException {
@@ -143,6 +146,21 @@ public class NotepadGui extends JFrame{
 			File selectedFile = openFileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
 		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		wordCounterLabel.setText(" Word: " + new StringTokenizer(textArea.getText()).countTokens());
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
 	}
 
 	private class EventHandler implements ActionListener {
