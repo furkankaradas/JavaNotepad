@@ -8,11 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.StringTokenizer;
 
-public class NotepadGui extends JFrame {
+public class NotepadGui extends JFrame{
 
 	private final int frameWidthSize = 600;
 	private final int frameHeightSize = 400;
@@ -22,8 +24,9 @@ public class NotepadGui extends JFrame {
 	private String keyWord;
 
 	private Container mainContainer;
+
 	private Highlighter highlighter;
-	Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+	private Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
 
 
 	private JMenuBar menuBar = new JMenuBar();
@@ -44,7 +47,11 @@ public class NotepadGui extends JFrame {
 	private JFileChooser openFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 	private JFileChooser saveFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
+	private JLabel wordCounterLabel = new JLabel(" Word: 0");
+
 	{
+
+
 		menuItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
 		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
@@ -89,7 +96,9 @@ public class NotepadGui extends JFrame {
 		this.setJMenuBar(menuBar);
 
 		mainContainer = this.getContentPane();
-		mainContainer.add(scrollPane);
+		mainContainer.add(scrollPane, BorderLayout.CENTER);
+		mainContainer.add(wordCounterLabel, BorderLayout.SOUTH);
+
 		prepareActionListener();
 
 	}
@@ -213,5 +222,6 @@ public class NotepadGui extends JFrame {
 
 		}
 	}
+
 
 }
