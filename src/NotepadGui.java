@@ -1,6 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +18,13 @@ public class NotepadGui extends JFrame {
 	private final int frameHeightSize = 400;
 	private final int locationX = 450;
 	private final int locationY = 200;
+	private boolean findValue = false;
 	private String keyWord;
 
 	private Container mainContainer;
+	private Highlighter highlighter;
+	Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+
 
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File");
@@ -28,6 +35,7 @@ public class NotepadGui extends JFrame {
 	private JMenuItem menuItemSave = new JMenuItem("Save",'S');
 	private JMenuItem menuItemExit = new JMenuItem("Exit",'E');
 	private JMenuItem findMenuItem = new JMenuItem("Find");
+	private JMenuItem findClearMenuItem = new JMenuItem("Clear Highlights");
 	private JMenuItem helpMenuAbout = new JMenuItem("About",'H');
 
 	private JTextArea textArea = new JTextArea();
@@ -53,7 +61,9 @@ public class NotepadGui extends JFrame {
 		helpMenu.add(helpMenuAbout);
 
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+		findClearMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
 		findMenu.add(findMenuItem);
+		findMenu.add(findClearMenuItem);
 
 
 		menuBar.add(fileMenu);
@@ -93,6 +103,7 @@ public class NotepadGui extends JFrame {
 		menuItemExit.addActionListener(eventHandler);
 		helpMenuAbout.addActionListener(eventHandler);
 		findMenuItem.addActionListener(eventHandler);
+		findClearMenuItem.addActionListener(eventHandler);
 	}
 
 	private void saveFile() throws IOException {
@@ -164,22 +175,40 @@ public class NotepadGui extends JFrame {
 
 			else if(event.getSource() == findMenuItem) {
 				int startIndex, endIndex;
+
 				String textAreaWords;
+
 				keyWord = JOptionPane.showInputDialog(null, "Find Key:");
 				if(keyWord != null) {
 					textAreaWords = textArea.getText();
 					startIndex = textAreaWords.indexOf(keyWord);
-					if(startIndex != -1) {
+					highlighter = textArea.getHighlighter();
+					while(startIndex != -1) {
 						endIndex = startIndex + keyWord.length();
-						textArea.setSelectionStart(startIndex);
-						textArea.setSelectionEnd(endIndex);
+						try {
+							highlighter.addHighlight(startIndex, endIndex, painter);
+						} catch (BadLocationException e) {
+							JOptionPane.showInternalMessageDialog(null, "Highlight Error!",
+									"Error!", JOptionPane.WARNING_MESSAGE);
+						}
+						startIndex = textAreaWords.indexOf(keyWord, endIndex);
+						findValue = true;
 					}
-					else {
+					if (findValue == false) {
 						JOptionPane.showInternalMessageDialog(null, "Key not found!",
 								"Attention", JOptionPane.WARNING_MESSAGE);
+
 					}
 				}
 
+			}
+
+			else if (event.getSource() == findClearMenuItem) {
+				if(findValue == true) {
+					highlighter.removeAllHighlights();
+					JOptionPane.showInternalMessageDialog(null, "Highlight Cleared.",
+							"Attention", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 
 		}
