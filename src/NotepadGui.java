@@ -25,14 +25,12 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 	private Container mainContainer;
 
-	private Highlighter highlighter;
-	private Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
-
-
 	private JMenuBar menuBar = new JMenuBar();
+
 	private JMenu fileMenu = new JMenu("File");
 	private JMenu findMenu = new JMenu("Edit");
 	private JMenu helpMenu = new JMenu("Help");
+
 	private JMenuItem menuItemNew  = new JMenuItem("New",'N');
 	private JMenuItem menuItemOpen = new JMenuItem("Open",'O');
 	private JMenuItem menuItemSave = new JMenuItem("Save",'S');
@@ -49,14 +47,15 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 	private JLabel wordCounterLabel = new JLabel(" Word: 0");
 
+
+	private Highlighter highlighter;
+	private Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.CYAN);
+
 	{
-
-
 		menuItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
 		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 		menuItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-
 
 		fileMenu.add(menuItemNew);
 		fileMenu.add(menuItemOpen);
@@ -72,13 +71,13 @@ public class NotepadGui extends JFrame implements KeyListener {
 		findMenu.add(findMenuItem);
 		findMenu.add(findClearMenuItem);
 
-
 		menuBar.add(fileMenu);
 		menuBar.add(findMenu);
 		menuBar.add(helpMenu);
 
-
 		textArea.setBorder(new LineBorder(Color.lightGray, 3));
+		textArea.setFont(new Font("Comic Sans Ms", Font.BOLD, 14));
+
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -227,7 +226,6 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 					}
 				}
-
 			}
 
 			else if (event.getSource() == findClearMenuItem) {
@@ -240,6 +238,4 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 		}
 	}
-
-
 }
