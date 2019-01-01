@@ -125,14 +125,21 @@ public class NotepadGui extends JFrame implements KeyListener {
 			return;
 		}
 		else {
+			String fileName = saveFileChooser.getSelectedFile().getPath();
+			String context = textArea.getText();
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileChooser.getSelectedFile().getPath(), false));
-			writer.write(textArea.getText());
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+			writer.write(context);
 			writer.close();
+
 			JOptionPane.showInternalMessageDialog(null, "Succesfully Saved!",
 					"Message", JOptionPane.INFORMATION_MESSAGE);
 
 		}
+	}
+
+	private void counterWord() {
+		wordCounterLabel.setText(" Word: " + new StringTokenizer(textArea.getText()).countTokens());
 	}
 
 	private void openFile() throws IOException {
@@ -144,6 +151,7 @@ public class NotepadGui extends JFrame implements KeyListener {
 		else {
 			File selectedFile = openFileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath()))));
+			counterWord();
 		}
 	}
 
@@ -154,13 +162,16 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		wordCounterLabel.setText(" Word: " + new StringTokenizer(textArea.getText()).countTokens());
+		counterWord();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			highlighter.removeAllHighlights();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			counterWord();
 		}
 	}
 
