@@ -67,7 +67,7 @@ public class NotepadGui extends JFrame implements KeyListener {
 		helpMenu.add(helpMenuAbout);
 
 		findMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-		findClearMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
+		findClearMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 		findMenu.add(findMenuItem);
 		findMenu.add(findClearMenuItem);
 
@@ -159,7 +159,9 @@ public class NotepadGui extends JFrame implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			highlighter.removeAllHighlights();
+		}
 	}
 
 	private class EventHandler implements ActionListener {
@@ -205,7 +207,7 @@ public class NotepadGui extends JFrame implements KeyListener {
 				String textAreaWords;
 
 				keyWord = JOptionPane.showInputDialog(null, "Find Key:");
-				if(keyWord != null) {
+				if(keyWord != null && keyWord != "") {
 					textAreaWords = textArea.getText();
 					startIndex = textAreaWords.indexOf(keyWord);
 					highlighter = textArea.getHighlighter();
@@ -220,7 +222,7 @@ public class NotepadGui extends JFrame implements KeyListener {
 						startIndex = textAreaWords.indexOf(keyWord, endIndex);
 						findValue = true;
 					}
-					if (findValue == false) {
+					if (!findValue) {
 						JOptionPane.showInternalMessageDialog(null, "Key not found!",
 								"Attention", JOptionPane.WARNING_MESSAGE);
 
@@ -229,10 +231,11 @@ public class NotepadGui extends JFrame implements KeyListener {
 			}
 
 			else if (event.getSource() == findClearMenuItem) {
-				if(findValue == true) {
+				if(findValue) {
 					highlighter.removeAllHighlights();
 					JOptionPane.showInternalMessageDialog(null, "Highlight Cleared.",
 							"Attention", JOptionPane.INFORMATION_MESSAGE);
+					findValue = false;
 				}
 			}
 
